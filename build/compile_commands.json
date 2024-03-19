@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/develop/homework/The final project/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Search_Engine.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\Search_Engine.dir\\search_engine.cpp.obj -c \"C:\\develop\\homework\\The final project\\search_engine.cpp\"",
+  "file": "C:/develop/homework/The final project/search_engine.cpp",
+  "output": "CMakeFiles/Search_Engine.dir/search_engine.cpp.obj"
+}
+]
