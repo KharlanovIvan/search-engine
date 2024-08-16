@@ -1,0 +1,7 @@
+/build/
+/.vscode/
+/resources/
+/nlohmann_json/
+answers.json
+config.json
+requests.json
