@@ -4,6 +4,21 @@
 
 #include "nlohmann/json.hpp"
 
+
+
+
+
+
+
+class InvertedIndex {
+
+    public:
+
+};
+
+
+
+
 /**
 * Класс для работы с JSON-файлами
 */
@@ -13,7 +28,7 @@ public:
     ConverterJSON() = default;
 
 
-/* Метод получения содержимого файлов. Возвращает список с содержимым файлов перечисленных в config.json */
+/* Метод получения содержимого файлов возвращает список с содержимым файлов перечисленных в config.json */
 static std::vector<std::string> GetTextDocuments() {
     std::string configPath = "../config.json";
     std::vector<std::string> fileContents;
@@ -54,11 +69,8 @@ static std::vector<std::string> GetTextDocuments() {
     // Возвращение списка содержимого файлов
     return fileContents;
 }
-/**
-* Метод считывает поле max_responses для определения предельного
-* количества ответов на один запрос
-* @return
-*/
+
+/* Метод считывает поле max_responses для определения предельного количества ответов на один запрос */
 static int GetResponsesLimit() {
     int maxResponses;
     std::string configPath = "../config.json";
@@ -82,16 +94,36 @@ static int GetResponsesLimit() {
     }
     return maxResponses;
 }
-/**
-* Метод получения запросов из файла requests.json
-* @return возвращает список запросов из файла requests.json
-*/
-std::vector<std::string> GetRequests();
-/**
-* Положить в файл answers.json результаты поисковых запросов
-*/
+/* Метод получения запросов из файла requests.json возвращает список запросов из файла requests.json */
+static std::vector<std::string> GetRequests() {
+    std::vector<std::string> requestsList;
+    std::string requestsPath = "../requests.json";
+    try {
+        std::ifstream requestsFile(requestsPath);
+        if (!requestsFile.is_open()) {
+            throw std::runtime_error("Не удалось открыть файл с запросами");
+        } else { 
+            std::cerr << "Файл с запросами открыт" << std::endl;
+        }
+
+        nlohmann::json requests;
+        requestsFile >> requests;
+        requestsList = requests.at("requests").get<std::vector<std::string>>();
+
+    } catch (const nlohmann::json::exception& e) {
+        std::cerr << "Ошибка при обработке файла с запросами: " << e.what() << std::endl;
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what() << std::endl;
+    }
+    return requestsList;
+}
+
+
+
+/* Положить в файл answers.json результаты поисковых запросов */
 void putAnswers(std::vector<std::vector<std::pair<int, float>>>
 answers);
+
 };
 
 
@@ -104,12 +136,18 @@ std::vector<std::string> fileContetnts;
 
 fileContetnts = ConverterJSON::GetTextDocuments();
 
-for (std::string fileText : fileContetnts) {
+for(std::string fileText : fileContetnts) {
     std::cout << fileText << std::endl;
     std::cout << "_____________________________________________________________________" << std::endl;
 }
 int mR = ConverterJSON::GetResponsesLimit();
 std::cout << "MAX_RESPONSES = " << mR;
+
+std::vector<std::string> requests = ConverterJSON::GetRequests();
+int i = 0;
+for(std::string request : requests) {
+    std::cout << "REQUEST #" << ++i << ": " <<request <<std::endl; 
+}
 
     return 0;
 }
