@@ -20,6 +20,7 @@ enable_testing()
 
 # Добавляем тесты
 add_executable(tests test.cpp)
+
 target_link_libraries(tests PRIVATE gtest_main)
 
 # Автоматическое обнаружение тестов
