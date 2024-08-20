@@ -4,6 +4,9 @@ project(search_engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Установка директории для исполняемых файлов
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Подключение nlohmann_json и googletest через FetchContent
 include(FetchContent)
 
