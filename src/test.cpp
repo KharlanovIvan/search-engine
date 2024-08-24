@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "InvertedIndex.h"
-//#include "SearchServer.h"
-// #include "ConverterJSON.h"
+#include "SearchServer.h"
+#include "ConverterJSON.h"
 
 
 
@@ -10,8 +10,6 @@ using namespace std;
 TEST(sample_test_case, sample_test) {
     EXPECT_EQ(1, 1);
 }
-
-/*
 
 void TestInvertedIndexFunctionality(
     const vector<string>& docs,
@@ -27,7 +25,7 @@ void TestInvertedIndexFunctionality(
     }
     ASSERT_EQ(result, expected);
 }
-/*
+
 TEST(TestCaseInvertedIndex, TestBasic) {
     const vector<string> docs = {
         "london is the capital of great britain",
@@ -123,6 +121,13 @@ TEST(TestCaseSearchServer, TestTop5) {
     SearchServer srv(idx);
     std::vector<vector<RelativeIndex>> result = srv.search(request);
     ASSERT_EQ(result, expected);
-
 }
-*/
+
+
+// Функция main() для тестов
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    int result = RUN_ALL_TESTS();
+    system("pause"); // Добавляем команду для паузы
+    return result;
+}
