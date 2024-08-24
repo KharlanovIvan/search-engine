@@ -4,6 +4,7 @@ set(SOURCE_FILES
     ConverterJSON.cpp
     InvertedIndex.cpp
     ThreadPool.cpp
+    SearchServer.cpp
 )
 
 # Создаем исполняемый файл
@@ -20,6 +21,8 @@ enable_testing()
 
 # Добавляем тесты
 add_executable(tests test.cpp)
+
+target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 target_link_libraries(tests PRIVATE gtest_main)
 

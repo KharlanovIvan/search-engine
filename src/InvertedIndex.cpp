@@ -5,8 +5,8 @@
 InvertedIndex::InvertedIndex() = default;
 
 
-void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs) {
-    docs = std::move(input_docs);
+void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& input_docs) {
+    docs = input_docs;
     freq_dictionary.clear();  // Очистка словаря при обновлении базы документов
 }
 
