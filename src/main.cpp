@@ -10,7 +10,7 @@
 
 
 int main() {
-    
+
     try {
         // Создание инвертированного индекса
         InvertedIndex invertedIndex;
@@ -83,6 +83,6 @@ int main() {
         std::cerr << "Unknown error: " << e.what() << std::endl;
         return 1; 
     }
-    
+
     return 0;
 }

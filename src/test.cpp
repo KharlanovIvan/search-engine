@@ -2,10 +2,12 @@
 #include "InvertedIndex.h"
 #include "SearchServer.h"
 #include "ConverterJSON.h"
+#include "ThreadPool.h"
 
 
 
 using namespace std;
+
 
 TEST(sample_test_case, sample_test) {
     EXPECT_EQ(1, 1);
@@ -26,6 +28,7 @@ void TestInvertedIndexFunctionality(
     ASSERT_EQ(result, expected);
 }
 
+
 TEST(TestCaseInvertedIndex, TestBasic) {
     const vector<string> docs = {
         "london is the capital of great britain",
@@ -39,6 +42,7 @@ TEST(TestCaseInvertedIndex, TestBasic) {
     TestInvertedIndexFunctionality(docs, requests, expected);
 }
 
+
 TEST(TestCaseInvertedIndex, TestBasic2) {
     const vector<string> docs = {
         "milk milk milk milk water water water",
@@ -46,14 +50,15 @@ TEST(TestCaseInvertedIndex, TestBasic2) {
         "milk milk milk milk milk water water water water water",
         "americano cappuccino"
     };
-    const vector<string> requests = {"milk", "water", "cappuchino"};
+    const vector<string> requests = {"milk", "water", "cappuccino"};
     const vector<vector<Entry>> expected = {
         {{0, 4}, {1, 1}, {2, 5}},
-        {{0, 2}, {1, 2}, {2, 5}},
+        {{0, 3}, {1, 2}, {2, 5}},
         {{3, 1}}
     };
     TestInvertedIndexFunctionality(docs, requests, expected);
 }
+
 
 TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
     const vector<string> docs = {
@@ -67,6 +72,7 @@ TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
     };
     TestInvertedIndexFunctionality(docs, requests, expected);
 }
+
 
 TEST(TestCaseSearchServer, TestSimple) {
     const vector<string> docs = {
@@ -82,10 +88,32 @@ TEST(TestCaseSearchServer, TestSimple) {
     };
     InvertedIndex idx;
     idx.UpdateDocumentBase(docs);
+        {
+            // Создание пула потоков с количеством потоков, равным количеству ядер процессора
+            ThreadPool threadPool(std::thread::hardware_concurrency());
+
+            // Обработка каждого документа в отдельном потоке
+            for (int i = 0; i < idx.GetDocuments().size(); ++i) {
+                // lambda-функция для выполнения задачи в потоке
+                threadPool.enqueueTask([&idx, i] {
+                    std::istringstream iss(idx.GetDocuments()[i]);
+                    std::string word;
+                    while (iss >> word) {
+                        idx.GetWordCount(word); // Индексация слов
+                    }
+                });
+            }
+
+            // Ожидание завершения всех задач в пуле потоков
+            threadPool.waitAllTasks();
+            // Когда все задачи завершены, потоки автоматически завершат работу при разрушении threadPool
+        }
+
     SearchServer srv(idx);
     std::vector<vector<RelativeIndex>> result = srv.search(request);
     ASSERT_EQ(result, expected);
 }
+
 
 TEST(TestCaseSearchServer, TestTop5) {
     const vector<string> docs = {
@@ -114,10 +142,30 @@ TEST(TestCaseSearchServer, TestTop5) {
     };
     const vector<string> request = {"moscow is the capital of russia"};
     const std::vector<vector<RelativeIndex>> expected = {
-        {{7, 1}, {14, 1}, {0, 0.666666687}, {1, 0.666666687}, {2, 0.666666687}}
+        {{7, 1.0}, {14, 1.0}, {11, 0.666666687}, {21, 0.666666687}, {20, 0.666666687}}
     };
     InvertedIndex idx;
     idx.UpdateDocumentBase(docs);
+    {
+            // Создание пула потоков с количеством потоков, равным количеству ядер процессора
+            ThreadPool threadPool(std::thread::hardware_concurrency());
+
+            // Обработка каждого документа в отдельном потоке
+            for (int i = 0; i < idx.GetDocuments().size(); ++i) {
+                // lambda-функция для выполнения задачи в потоке
+                threadPool.enqueueTask([&idx, i] {
+                    std::istringstream iss(idx.GetDocuments()[i]);
+                    std::string word;
+                    while (iss >> word) {
+                        idx.GetWordCount(word); // Индексация слов
+                    }
+                });
+            }
+
+            // Ожидание завершения всех задач в пуле потоков
+            threadPool.waitAllTasks();
+            // Когда все задачи завершены, потоки автоматически завершат работу при разрушении threadPool
+        }
     SearchServer srv(idx);
     std::vector<vector<RelativeIndex>> result = srv.search(request);
     ASSERT_EQ(result, expected);

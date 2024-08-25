@@ -2,7 +2,6 @@
 
 
 
-
 // Конструктор, который инициализирует сервер поиска, принимая на вход объект обратного индекса
 SearchServer::SearchServer(InvertedIndex& idx) : _index(idx) {}
 

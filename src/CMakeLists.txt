@@ -31,6 +31,7 @@ set(TEST_SOURCES
     ConverterJSON.cpp
     InvertedIndex.cpp
     SearchServer.cpp
+    ThreadPool.cpp
 )
 
 # Создаем исполняемый файл для тестов, добавляя исходные файлы тестов и основные файлы

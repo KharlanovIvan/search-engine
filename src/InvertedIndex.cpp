@@ -1,5 +1,8 @@
 #include "InvertedIndex.h"
 
+#include <sstream>
+#include <unordered_map>
+
 
 
 // Конструктор по умолчанию для класса InvertedIndex
@@ -11,6 +14,7 @@ void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& input_doc
     freq_dictionary.clear();  // Очищаем словарь частот при обновлении базы документов
 }
 
+
 // Метод для получения частот вхождения слова в документы
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) {
     // Проверяем, есть ли слово в частотном словаре
@@ -21,18 +25,22 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) {
 
     std::vector<Entry> v; // Вектор для хранения результатов подсчета
 
-    // Цикл по всем документам для подсчета количества вхождений слова
+    // Обходим все документы для подсчета количества вхождений слова
     for (int index = 0; index < docs.size(); ++index) {
         Entry entry;
         entry.doc_id = index; // Устанавливаем идентификатор документа
         entry.count = 0;      // Инициализируем счетчик вхождений
 
-        size_t pos = docs[index].find(word); // Ищем первое вхождение слова в документе
+        // Создаем поток для разбора документа на слова
+        std::istringstream stream(docs[index]);
+        std::string token;
 
-        // Пока находим вхождения слова в документе, увеличиваем счетчик
-        while (pos != std::string::npos) {
-            ++entry.count;
-            pos = docs[index].find(word, pos + word.length()); // Ищем следующее вхождение
+        // Читаем слова из документа
+        while (stream >> token) {
+            // Если слово совпадает с искомым, увеличиваем счетчик
+            if (token == word) {
+                ++entry.count;
+            }
         }
 
         // Если слово было найдено хотя бы один раз, добавляем запись в вектор
@@ -46,3 +54,5 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) {
 
     return v; // Возвращаем вектор с результатами
 }
+
+
