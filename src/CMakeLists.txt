@@ -22,6 +22,10 @@ target_include_directories(search_engine PRIVATE ${CMAKE_SOURCE_DIR}/include)
 # Связываем основное приложение с необходимыми библиотеками
 target_link_libraries(search_engine PRIVATE nlohmann_json::nlohmann_json)
 
+# Команды для копирования файлов config.json и requests.json в папку с бинарниками
+file(COPY ${CMAKE_SOURCE_DIR}/resources/config.json DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY ${CMAKE_SOURCE_DIR}/resources/requests.json DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 # Указываем, что в проекте будут применяться тесты
 enable_testing()
 

@@ -3,9 +3,9 @@
 
 
 const std::string VERSION = "0.1";
-const std::string CONFIG_PATH = "../../config.json";  // Путь к конфигурационному файлу
-const std::string REQUESTS_PATH = "../../requests.json"; // Путь к файлу запросов
-const std::string ANSWERS_PATH = "../../answers.json";  // Путь к файлу ответов
+const std::string CONFIG_PATH = "config.json";  // Путь к конфигурационному файлу
+const std::string REQUESTS_PATH = "requests.json"; // Путь к файлу запросов
+const std::string ANSWERS_PATH = "answers.json";  // Путь к файлу ответов
 
 
 ConverterJSON::ConverterJSON() = default; // Конструктор по умолчанию

@@ -22,6 +22,5 @@ public:
     static std::vector<std::string> GetRequests();
 
     // Положить в файл answers.json результаты поисковых запросов
-    static void putAnswers(std::vector<std::vector<std::pair<int, float>>>
-answers);
+    static void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
 };

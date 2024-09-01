@@ -1,7 +1,5 @@
 #include "InvertedIndex.h"
 
-#include <sstream>
-#include <unordered_map>
 
 
 
